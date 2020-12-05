@@ -1,0 +1,19 @@
+{
+  "name": "sample-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "up": "docker-compose up -d",
+    "stop": "docker-compose stop",
+    "down": "docker-compose down",
+    "dev": "docker-compose -f docker-compose-databases.yml up -d",
+    "devdown": "docker-compose -f docker-compose-databases.yml down",
+    "server": "npm start --prefix server ",
+    "client": "npm start --prefix client"
+  },
+  "keywords": [],
+  "author": "Samir Zubic",
+  "license": "MIT",
+  "dependencies": {}
+}

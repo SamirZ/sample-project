@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+    db:
+        user: $UID
+        image: mongo:latest
+        container_name: mongodb
+        ports:
+            - '27017:27017'
+        volumes:
+            - ./data:/data/db
+            - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+        env_file:
+            - .env
+
+    cache:
+        image: redis:alpine
+        container_name: rediscache
+        ports:
+            - '6379:6379'
+        command: ['--requirepass "secret"']
+        env_file:
+            - .env
+
+    web-app:
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        volumes:
+            - ./client:/app
+        ports:
+            - '80:80'
+        restart: on-failure
+        container_name: web-app
+
+    api:
+        build:
+            context: ./server
+            dockerfile: Dockerfile
+        ports:
+            - '4000:4000'
+        restart: on-failure
+        container_name: api
+        volumes:
+            - ./server:/app # Look at the server directory and copy everything into the app folder in the container
+        links:
+            - db
+            - cache
+        env_file:
+            - .env
