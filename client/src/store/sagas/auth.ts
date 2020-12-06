@@ -1,7 +1,17 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, delay, put, takeLatest } from 'redux-saga/effects';
 
 import { login, logout, register } from '../../api/apiRequest';
-import { LOGIN, LoginAction, LOGOUT, REGISTER, RegisterAction } from '../types';
+import {
+    LOGIN,
+    LOGIN_FAILURE,
+    LoginAction,
+    LoginActionFaliure,
+    REGISTER,
+    REGISTER_FAILURE,
+    RegisterAction,
+    RegisterActionFaliure,
+    LOGOUT,
+} from '../types';
 import {
     loginActionSuccess,
     loginActionFailure,
@@ -21,8 +31,7 @@ function* loginWatcher(action: LoginAction) {
         yield put(getUserDetailsAction());
         routerProps.history.replace('/');
     } catch (e) {
-        console.error(e);
-        yield put(loginActionFailure(e.message));
+        yield put(loginActionFailure(e.response.data.message));
     }
 }
 
@@ -30,10 +39,31 @@ export function* loginSaga() {
     yield takeLatest(LOGIN, loginWatcher);
 }
 
+function* loginFailureWatcher(action: LoginActionFaliure) {
+    try {
+        if (action.payload.error) {
+            yield delay(6000);
+            yield put(loginActionFailure(undefined));
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export function* loginFailureSaga() {
+    yield takeLatest(LOGIN_FAILURE, loginFailureWatcher);
+}
+
 function* registerWatcher(action: RegisterAction) {
     try {
         const {
-            payload: { email, name, password, passwordConfirmation, routerProps },
+            payload: {
+                email,
+                name,
+                password,
+                passwordConfirmation,
+                routerProps,
+            },
         } = action;
         const data: AuthResponseModel = yield call(
             register,
@@ -46,13 +76,27 @@ function* registerWatcher(action: RegisterAction) {
         yield put(getUserDetailsAction());
         routerProps.history.replace('/');
     } catch (e) {
-        console.error(e);
-        yield put(registerActionFailure(e.message));
+        yield put(registerActionFailure(e.response.data.message));
     }
 }
 
 export function* registerSaga() {
     yield takeLatest(REGISTER, registerWatcher);
+}
+
+function* registerFailureWatcher(action: RegisterActionFaliure) {
+    try {
+        if (action.payload.error) {
+            yield delay(6000);
+            yield put(registerActionFailure(undefined));
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export function* registerFailureSaga() {
+    yield takeLatest(REGISTER_FAILURE, registerFailureWatcher);
 }
 
 function* logoutWatcher() {

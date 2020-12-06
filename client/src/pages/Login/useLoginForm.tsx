@@ -10,7 +10,7 @@ export interface LoginFormData {
 }
 
 export const useLoginForm = (routerProps: RouteComponentProps) => {
-    const { register, handleSubmit } = useForm<LoginFormData>();
+    const { register, errors, handleSubmit } = useForm<LoginFormData>();
     const dispatch = useDispatch();
     const onSubmit = useCallback(({ email, password }: LoginFormData) => {
         dispatch(loginAction(email, password, routerProps));
@@ -18,6 +18,7 @@ export const useLoginForm = (routerProps: RouteComponentProps) => {
 
     return {
         register,
+        errors,
         onSubmit: handleSubmit(onSubmit),
     };
 };

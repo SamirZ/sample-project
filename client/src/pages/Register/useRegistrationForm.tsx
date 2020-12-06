@@ -12,7 +12,7 @@ export interface RegistrationFormData {
   }
 
 export const useRegistrationForm = (routerProps: RouteComponentProps) => {
-    const { register, handleSubmit } = useForm<RegistrationFormData>();
+    const { register, errors, watch, handleSubmit } = useForm<RegistrationFormData>();
     const dispatch = useDispatch()
     const onSubmit = useCallback(({email, name, password, passwordConfirmation}: RegistrationFormData) => {
         dispatch(registerAction(email, name, password, passwordConfirmation, routerProps));
@@ -20,6 +20,8 @@ export const useRegistrationForm = (routerProps: RouteComponentProps) => {
 
     return {
         register,
+        errors,
+        watch,
         onSubmit: handleSubmit(onSubmit)
     }
 }

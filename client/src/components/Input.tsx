@@ -14,6 +14,17 @@ const StyledInput = styled.input`
     }
 `;
 
+interface ErrorMessageProps {
+    noMarginTop?: boolean;
+}
+
+export const ErrorMessage = styled.p<ErrorMessageProps>`
+    font-size: 16px;
+    margin: ${props => props.noMarginTop ? '0 auto' : '-1.5rem auto 0'};
+    padding: 0 1rem;
+    color: #ff4800;
+`;
+
 export const Input = forwardRef<
     HTMLInputElement,
     Omit<JSX.IntrinsicElements['input'], 'ref'>
