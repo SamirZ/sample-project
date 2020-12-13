@@ -31,7 +31,8 @@ function* loginWatcher(action: LoginAction) {
         yield put(getUserDetailsAction());
         routerProps.history.replace('/');
     } catch (e) {
-        yield put(loginActionFailure(e.response.data.message));
+        console.error(e);
+        yield put(loginActionFailure('Login failed'));
     }
 }
 
@@ -76,7 +77,8 @@ function* registerWatcher(action: RegisterAction) {
         yield put(getUserDetailsAction());
         routerProps.history.replace('/');
     } catch (e) {
-        yield put(registerActionFailure(e.response.data.message));
+        console.error(e);
+        yield put(registerActionFailure('Register failed'));
     }
 }
 
