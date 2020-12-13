@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { AuthResponseModel, PageReadResponseModel , PageModifyResponseModel, Page } from '../models/localapi/auth-response.model';
 import UserModel from '../models/localapi/user.model';
 
-const baseURL = 'http://localhost:4000';
+const baseURL = process.env.BASE_URL || 'http://localhost:4000';
 const instance = axios.create({ baseURL, withCredentials: true });
 
 const extractData = <T, >(res: AxiosResponse<T>) => res.data;
