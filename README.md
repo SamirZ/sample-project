@@ -30,12 +30,7 @@ The applicaiton uses a API key from https://www.themoviedb.org to provide some d
     REDIS_HOST=cache  
     REDIS_PASSWORD=xxxxxx  
     REACT_APP_API_KEY=xxxxxx  
-    ALLOWED_ORIGINS="http://localhost http://localhost:3000 ..." 
-
-
-
-Note: Change the xxxxxx to variables you desire or have available. You can add aditional origins to the ALLOWED_ORIGINS key
-      if you want to access the server from a different location
+    ALLOWED_ORIGIN=http://localhost
 
 
 ## How to get up and running

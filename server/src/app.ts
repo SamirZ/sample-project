@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import session, { Store } from 'express-session';
-import { ALLOWED_ORIGINS, IN_PROD, SESSION_OPTIONS } from './config';
+import { ALLOWED_ORIGIN, IN_PROD, SESSION_OPTIONS } from './config';
 import { active, catchAsync, notFound, serverError } from './middleware';
 
 import { home, login, register } from './routes';
@@ -16,20 +16,7 @@ export const createApp = (store: Store) => {
     // // Set security HTTP headers
     app.use(helmet());
 
-    const allowlist = ALLOWED_ORIGINS.split(' ');
-    const corsOptionsDelegate: CorsOptionsDelegate = function (req, callback) {
-        var corsOptions;
-        if (allowlist.indexOf(`${req.header('Origin')}`) !== -1) {
-            corsOptions = {
-                origin: `${req.header('Origin')}`,
-                credentials: true,
-            }; // reflect (enable) the requested origin in the CORS response
-        } else {
-            corsOptions = { origin: false }; // disable CORS for this request
-        }
-        callback(null, corsOptions);
-    };
-    app.use(cors(corsOptionsDelegate));
+    app.use(cors({ origin: ALLOWED_ORIGIN, credentials: true }));
 
     app.use(express.json());
 
@@ -41,7 +28,8 @@ export const createApp = (store: Store) => {
         const limiter = rateLimit({
             max: 100,
             windowMs: 60 * 60 * 60 * 1000,
-            message: 'Too many request from this IP please try again in an hour!',
+            message:
+                'Too many request from this IP please try again in an hour!',
         });
         app.use(limiter);
     }
